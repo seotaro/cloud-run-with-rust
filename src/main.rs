@@ -17,18 +17,10 @@ async fn main() {
         .route("/", get(handle_get_root))
         .route("/", post(handle_post_root));
 
-    let mut port: u16 = 8080;
-    match env::var("PORT") {
-        Ok(p) => {
-            match p.parse::<u16>() {
-                Ok(n) => {
-                    port = n;
-                }
-                Err(_e) => {}
-            };
-        }
-        Err(_e) => {}
-    };
+    let port: u16 = std::env::var("PORT")
+        .and_then(|p| p.parse().map_err(|_| std::env::VarError::NotPresent))
+        .unwrap_or(8080);
+
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
 
     axum::Server::bind(&addr)
@@ -37,28 +29,31 @@ async fn main() {
         .unwrap();
 }
 
-fn decode_base64_to_struct(encoded: &str) -> Result<DATA_JSON_API_V1, String> {
-    let decoded_bytes = base64::decode(encoded).map_err(|e| e.to_string())?;
-    let decoded_str = String::from_utf8(decoded_bytes).map_err(|e| e.to_string())?;
-    serde_json::from_str(&decoded_str).map_err(|e| e.to_string())
-}
-
 async fn handle_get_root() -> StatusCode {
     println!("GET");
+
     StatusCode::OK
 }
 
 async fn handle_post_root(input: axum::extract::Json<Payload>) -> StatusCode {
     println!("POST {:?}", input.0.message);
-    match decode_base64_to_struct(&input.0.message.data) {
+
+    match decode_data_v1(&input.0.message.data) {
         Ok(data) => {
-            println!("Decoded data: {:?} {:?}", data.bucket, data.name);
+            println!("Decode data: {:?}", data);
         }
         Err(e) => {
-            println!("Error: {}", e);
+            println!("Decode error: {}", e);
         }
     }
+
     StatusCode::OK
+}
+
+fn decode_data_v1(src: &str) -> Result<DATA_JSON_API_V1, String> {
+    let dest_bytes = base64::decode(src).map_err(|e| e.to_string())?;
+    let dest_str = String::from_utf8(dest_bytes).map_err(|e| e.to_string())?;
+    serde_json::from_str(&dest_str).map_err(|e| e.to_string())
 }
 
 #[derive(Deserialize, Debug)]
