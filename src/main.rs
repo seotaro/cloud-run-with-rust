@@ -51,7 +51,7 @@ async fn handle_post_root(input: axum::extract::Json<Payload>) -> StatusCode {
 }
 
 fn decode_data_v1(src: &str) -> Result<DATA_JSON_API_V1, String> {
-    let dest_bytes = general_purpose::STANDARD_NO_PAD
+    let dest_bytes = general_purpose::STANDARD
         .decode(src)
         .map_err(|e| e.to_string())?;
 
