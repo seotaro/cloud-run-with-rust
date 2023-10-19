@@ -5,9 +5,9 @@ use axum::{
 };
 
 use base64;
+use base64::{engine::general_purpose, Engine as _};
 use serde::Deserialize;
 use serde_json;
-use std::env;
 use std::net::SocketAddr;
 use std::str;
 
@@ -51,8 +51,12 @@ async fn handle_post_root(input: axum::extract::Json<Payload>) -> StatusCode {
 }
 
 fn decode_data_v1(src: &str) -> Result<DATA_JSON_API_V1, String> {
-    let dest_bytes = base64::decode(src).map_err(|e| e.to_string())?;
+    let dest_bytes = general_purpose::STANDARD_NO_PAD
+        .decode(src)
+        .map_err(|e| e.to_string())?;
+
     let dest_str = String::from_utf8(dest_bytes).map_err(|e| e.to_string())?;
+
     serde_json::from_str(&dest_str).map_err(|e| e.to_string())
 }
 
