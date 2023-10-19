@@ -1,12 +1,11 @@
-use axum::routing::get;
+use axum::routing::post;
 use axum::Router;
+use serde::Deserialize;
 use std::net::SocketAddr;
-
-use std::env;
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(root));
+    let app = Router::new().route("/", post(handle_root));
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
 
@@ -16,13 +15,12 @@ async fn main() {
         .unwrap_or_else(|_| panic!("Server cannot launch."));
 }
 
-async fn root() -> String {
-    let mut hello = "Hello ".to_string();
-    match env::var("TARGET") {
-        Ok(target) => {
-            hello.push_str(&target);
-        }
-        Err(_e) => hello.push_str("World"),
-    };
-    hello
+async fn handle_root(input: axum::extract::Json<InputData>) -> String {
+    format!("Received: {:?}", input.0)
+}
+
+#[derive(Deserialize, Debug)]
+struct InputData {
+    name: String,
+    age: u32,
 }
