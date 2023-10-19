@@ -1,46 +1,28 @@
-use hyper::{
-    server::conn::AddrStream,
-    service::{make_service_fn, service_fn},
-    Body, Request, Response, Server,
-};
-use std::convert::Infallible;
+use axum::routing::get;
+use axum::Router;
+use std::net::SocketAddr;
+
 use std::env;
 
 #[tokio::main]
 async fn main() {
-    pretty_env_logger::init();
+    let app = Router::new().route("/", get(root));
 
-    let mut port: u16 = 8080;
-    match env::var("PORT") {
-        Ok(p) => {
-            match p.parse::<u16>() {
-                Ok(n) => {
-                    port = n;
-                }
-                Err(_e) => {}
-            };
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
+
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await
+        .unwrap_or_else(|_| panic!("Server cannot launch."));
+}
+
+async fn root() -> String {
+    let mut hello = "Hello ".to_string();
+    match env::var("TARGET") {
+        Ok(target) => {
+            hello.push_str(&target);
         }
-        Err(_e) => {}
+        Err(_e) => hello.push_str("World"),
     };
-    let addr = ([0, 0, 0, 0], port).into();
-
-    let make_svc = make_service_fn(|_socket: &AddrStream| async move {
-        Ok::<_, Infallible>(service_fn(move |_: Request<Body>| async move {
-            let mut hello = "Hello ".to_string();
-            match env::var("TARGET") {
-                Ok(target) => {
-                    hello.push_str(&target);
-                }
-                Err(_e) => hello.push_str("World"),
-            };
-            Ok::<_, Infallible>(Response::new(Body::from(hello)))
-        }))
-    });
-
-    let server = Server::bind(&addr).serve(make_svc);
-
-    println!("Listening on http://{}", addr);
-    if let Err(e) = server.await {
-        eprintln!("server error: {}", e);
-    }
+    hello
 }
