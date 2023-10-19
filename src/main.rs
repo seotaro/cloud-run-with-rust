@@ -50,7 +50,7 @@ async fn handle_post_root(input: axum::extract::Json<Payload>) -> StatusCode {
     StatusCode::OK
 }
 
-fn decode_data_v1(src: &str) -> Result<DATA_JSON_API_V1, String> {
+fn decode_data_v1(src: &str) -> Result<DataJsonApiV1, String> {
     let dest_bytes = general_purpose::STANDARD
         .decode(src)
         .map_err(|e| e.to_string())?;
@@ -79,22 +79,29 @@ struct Message {
 }
 
 #[derive(Deserialize, Debug)]
-struct DATA_JSON_API_V1 {
+struct DataJsonApiV1 {
     kind: String,
     id: String,
-    selfLink: String,
+    #[serde(rename = "selfLink")]
+    self_link: String,
     name: String,
     bucket: String,
     generation: String,
     metageneration: String,
-    contentType: String,
-    timeCreated: String,
+    #[serde(rename = "contentType")]
+    content_type: String,
+    #[serde(rename = "timeCreated")]
+    time_created: String,
     updated: String,
-    storageClass: String,
-    timeStorageClassUpdated: String,
+    #[serde(rename = "storageClass")]
+    storage_class: String,
+    #[serde(rename = "timeStorageClassUpdated")]
+    time_storage_class_updated: String,
     size: String,
-    md5Hash: String,
-    mediaLink: String,
+    #[serde(rename = "md5Hash")]
+    md5_hash: String,
+    #[serde(rename = "mediaLink")]
+    media_link: String,
     crc32c: String,
     etag: String,
 }

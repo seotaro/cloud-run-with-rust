@@ -1,0 +1,47 @@
+{
+  // IntelliSense を使用して利用可能な属性を学べます。
+  // 既存の属性の説明をホバーして表示します。
+  // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'cloud-run-with-rust'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=cloud-run-with-rust",
+          "--package=cloud-run-with-rust"
+        ],
+        "filter": {
+          "name": "cloud-run-with-rust",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "env": {},
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'cloud-run-with-rust'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=cloud-run-with-rust",
+          "--package=cloud-run-with-rust"
+        ],
+        "filter": {
+          "name": "cloud-run-with-rust",
+          "kind": "bin"
+        }
+      },
+      "env": {},
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
