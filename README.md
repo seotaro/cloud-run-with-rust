@@ -7,28 +7,36 @@ Rust で実装して Cloud Run にデプロイする
 
 ## Run on local
 
-install
-
-```bash
-cargo install --path .
-```
-
 run
 
 ```bash
-cloud-run-with-rust
+cargo run
 ```
 
+GET
+
 ```bash
-curl http://localhost:8080
+curl -X GET http://localhost:8080
+```
+
+POST
+
+```bash
+curl -d "@pubsub-push-sample.json" -X POST -H "Content-Type: application/json" http://localhost:8080
 ```
 
 ## Run on Cloud Run
 
+cloud settings
+
 ```bash
 gcloud services enable cloudbuild.googleapis.com --project={PROJECT_ID} 
 gcloud services enable run.googleapis.com --project={PROJECT_ID} 
+```
 
+Build & deploy
+
+```bash
 gcloud builds submit . --tag asia.gcr.io/{PROJECT_ID}/cloud-run-with-rust --project {PROJECT_ID} 
 gcloud run deploy cloud-run-with-rust \
   --project {PROJECT_ID} \
@@ -39,6 +47,14 @@ gcloud run deploy cloud-run-with-rust \
   --allow-unauthenticated
 ```
 
+GET
+
 ```bash
-curl https://{endpoint}
+curl -X GET https://{endpoint}
+```
+
+POST
+
+```bash
+curl -d "@pubsub-push-sample.json" -X POST -H "Content-Type: application/json" https://{endpoint}
 ```

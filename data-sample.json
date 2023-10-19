@@ -1,0 +1,19 @@
+{
+  "kind": "storage#object",
+  "id": "grib2/Z__C_RJTD_20221013000000_GSM_GPV_Rjp_Gll0p1deg_Lsurf_FD0000-0100_grib2.bin/1697711746111933",
+  "selfLink": "https://www.googleapis.com/storage/v1/b/grib2/o/Z__C_RJTD_20221013000000_GSM_GPV_Rjp_Gll0p1deg_Lsurf_FD0000-0100_grib2.bin",
+  "name": "Z__C_RJTD_20221013000000_GSM_GPV_Rjp_Gll0p1deg_Lsurf_FD0000-0100_grib2.bin",
+  "bucket": "grib2",
+  "generation": "1697711746111933",
+  "metageneration": "1",
+  "contentType": "application/macbinary",
+  "timeCreated": "2023-10-19T10:35:46.115Z",
+  "updated": "2023-10-19T10:35:46.115Z",
+  "storageClass": "STANDARD",
+  "timeStorageClassUpdated": "2023-10-19T10:35:46.115Z",
+  "size": "18810455",
+  "md5Hash": "DrxVtcD38ld8S3AgZLR1Cw==",
+  "mediaLink": "https://storage.googleapis.com/download/storage/v1/b/grib2/o/Z__C_RJTD_20221013000000_GSM_GPV_Rjp_Gll0p1deg_Lsurf_FD0000-0100_grib2.bin?generation=1697711746111933&alt=media",
+  "crc32c": "Rx2VwQ==",
+  "etag": "CL2zu4z1gYIDEAE="
+}
